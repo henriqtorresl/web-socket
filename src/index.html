@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            ul {
+                background-color: #efefef;
+                padding: 20px 0 20px 10px;
+            }
+        }
+
+        .form {
+            background-color: #efefef;
+            padding: 30px 0 30px 10px;
+
+            input {
+                width: 90%;
+                border: none;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
+            button {
+                border: none;
+                padding: 5px;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #000;
+                color: #fff;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <ul id="messages">
+            <li>Texto</li>
+        </ul>
+
+        <form action="" class="form">
+            <input id="input" type="text" autocomplete="off">
+            <button>Send</button>
+        </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        const message = document.getElementById('messages');
+        const input = document.getElementById('input');
+
+        // ouvindo o evento de message...
+        socket.on('message', (msg) => {
+            const li = document.createElement('li');
+            li.textContent = msg;
+
+            message.appendChild(li);
+        });
+
+        document.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // mandando o evento de message
+            if (input.value) {
+                // emitindo o evento message..
+                socket.emit('message', input.value);
+                input.value = '';
+            }
+        });
+    </script>
+</body>
+
+</html>
